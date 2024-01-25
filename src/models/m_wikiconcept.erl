@@ -584,7 +584,7 @@ install(Context) ->
 %% @doc Ensure that the wikiconcepts are loaded into the local table. They are downloaded from OpenAlex
 %% using their public API.
 install_data(Context) ->
-    case z_db:q("select count(*) from wikiconcept", Context) of
+    case z_db:q1("select count(*) from wikiconcept", Context) of
         0 ->
             z_pivot_rsc:insert_task(?MODULE, update_task, <<>>, Context);
         _ ->

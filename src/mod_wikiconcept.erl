@@ -1,0 +1,80 @@
+%% @author Driebit BV
+%% @copyright 2024 Driebit BV
+%% @doc Use Wikipedia concepts as keywords
+%% @end
+
+%% Copyright 2024 Driebit BV
+%%
+%% Licensed under the Apache License, Version 2.0 (the "License");
+%% you may not use this file except in compliance with the License.
+%% You may obtain a copy of the License at
+%%
+%%     http://www.apache.org/licenses/LICENSE-2.0
+%%
+%% Unless required by applicable law or agreed to in writing, software
+%% distributed under the License is distributed on an "AS IS" BASIS,
+%% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+%% See the License for the specific language governing permissions and
+%% limitations under the License.
+
+-module(mod_wikiconcept).
+
+-mod_title("Wikipedia concepts").
+-mod_description("Wikipedia concepts as keywords").
+-mod_author("Driebit BV").
+-mod_depends([ mod_admin ]).
+-mod_schema(1).
+
+-author("Driebit BV").
+
+-include_lib("zotonic_core/include/zotonic.hrl").
+
+-export([
+    observe_search_query/2,
+
+    event/2,
+
+    manage_schema/2,
+    manage_data/2
+    ]).
+
+observe_search_query(#search_query{
+        name = <<"wikiconcept">>,
+        offsetlimit = {Offset, Limit},
+        args = Args
+    }, Context) ->
+    Text = z_search:lookup_qarg_value(<<"text">>, Args, <<>>),
+    case m_wikiconcept:find(Text, Offset, Limit, Context) of
+        {ok, Concepts} ->
+            #search_result{
+                result = Concepts
+            };
+        {error, _} ->
+            #search_result{
+            }
+    end;
+observe_search_query(#search_query{ }, _Context) ->
+    undefined.
+
+event(#postback_notify{
+        message = <<"feedback">>,
+        trigger = <<"wikiconcept-search">>,
+        target = TargetId
+    }, Context) ->
+    Context1 = z_render:update(
+        "wikiconcept-search-result",
+        #render{
+            template = "_wikiconcept_search_result.tpl",
+            vars = [
+                {text, z_context:get_q(<<"triggervalue">>, Context )},
+                {target, TargetId}
+            ]
+        },
+        Context),
+    z_render:wire({remove_class, [{target, TargetId}, {class, "loading"}]}, Context1).
+
+manage_schema(_Version, Context) ->
+    m_wikiconcept:install(Context).
+
+manage_data(_Version, Context) ->
+    m_wikiconcept:install_data(Context).

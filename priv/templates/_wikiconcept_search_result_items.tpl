@@ -42,7 +42,7 @@
 
             {% if c.wikidata_id != text %}
                 <p class="text-muted wikiconcept__descendant">
-                    <a href="#{{ c.wikidata_id|escape }}">{_ Descending topics _} &gt;</a>
+                    <a href="#{{ c.wikidata_id|escape }}">{_ Descending concepts _} &gt;</a>
                 </p>
             {% endif %}
         </div>

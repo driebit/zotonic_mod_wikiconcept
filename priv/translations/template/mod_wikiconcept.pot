@@ -74,15 +74,9 @@ msgid ""
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:45
 msgid ""
 "Descending concepts"
-msgstr ""
-""
-
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:45
-msgid ""
-"Descending topics"
 msgstr ""
 ""
 

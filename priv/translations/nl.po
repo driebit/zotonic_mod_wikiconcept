@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2024-01-30 14:59+0100\n"
+"PO-Revision-Date: 2024-01-30 15:04+0100\n"
 "Last-Translator: Marc Worrell <marc@worrell.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -29,9 +29,8 @@ msgid ""
 "Associate one or more Wikidata concepts with this keyword. This is useful "
 "for mapping keywords when exchanging data between sites."
 msgstr ""
-"Koppel een of meer Wikidata concepten aan dit trefwoord. Dit is handig "
-"voor het koppelen van trefwoorden bij het uitwisselen van gegevens tussen "
-"sites."
+"Koppel een of meer Wikidata concepten aan dit trefwoord. Dit is handig voor "
+"het koppelen van trefwoorden bij het uitwisselen van gegevens tussen sites."
 
 #: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:6
 msgid "Click to select this concept."
@@ -61,16 +60,11 @@ msgstr "Maak een trefwoord uit de OpenAlex-lijst van Wikipedia-concepten."
 msgid ""
 "Create and connect a keyword from the OpenAlex list of Wikipedia concepts."
 msgstr ""
-"Maak en verbind een trefwoord uit de OpenAlex lijst van Wikipedia "
-"concepten."
+"Maak en verbind een trefwoord uit de OpenAlex lijst van Wikipedia concepten."
 
-#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:45
 msgid "Descending concepts"
 msgstr "Onderliggende concepten"
-
-#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:45
-msgid "Descending topics"
-msgstr "Onderliggende onderwerpen"
 
 #: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:7
 msgid "Disconnect"
@@ -123,3 +117,6 @@ msgstr "Wikidata Concepten"
 #: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:20
 msgid "Wikipedia"
 msgstr "Wikipedia"
+
+#~ msgid "Descending topics"
+#~ msgstr "Onderliggende onderwerpen"

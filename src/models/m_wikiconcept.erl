@@ -33,6 +33,9 @@
     find/4,
     find_all/3,
 
+    find_descendant/2,
+    find_descendant/4,
+
     collect_all/1,
 
     fetch_all/1,
@@ -191,6 +194,48 @@ get_concept(_, _Context) ->
     Reason :: term().
 find(Text, Context) ->
     find(Text, 1, 20, Context).
+
+%% @doc Find all concepts with a level directly below the given concept and which
+%% have the given concept as an ascendant.
+-spec find_descendant(Concept, Context) -> {ok, Concepts} | {error, Reason} when
+    Concept :: binary() | string(),
+    Context :: z:context(),
+    Concepts :: list(map()),
+    Reason :: term().
+find_descendant(Concept, Context) ->
+    find_descendant(Concept, 1, 1000, Context).
+
+%% @doc Find concepts with a level directly below the given concept and which
+%% have the given concept as an ascendant.
+-spec find_descendant(Concept, Offset, Limit, Context) -> {ok, Concepts} | {error, Reason} when
+    Concept :: binary() | string(),
+    Offset :: pos_integer(),
+    Limit :: pos_integer(),
+    Context :: z:context(),
+    Concepts :: list(map()),
+    Reason :: term().
+find_descendant(Concept, Offset, Limit, Context) ->
+    Concept1 = z_string:trim(unicode:characters_to_binary(Concept)),
+    case find_1(Concept1, 1, 1, Context) of
+        {ok, [C]} ->
+            #{
+                <<"level">> := Level,
+                <<"wikidata_id">> := WikidataID
+            } = C,
+            z_db:qmap_props("
+                select *
+                from wikiconcept
+                where level = $1
+                  and wikidata_ancestor_ids && $2
+                order by wikidata_id
+                offset $3 limit $4",
+                [ Level + 1, [ WikidataID ], Offset-1, Limit ],
+                Context);
+        {ok, []} ->
+            {ok, []};
+        {error, _} = Error ->
+            Error
+    end.
 
 %% @doc Find the concepts matching the words in the text.
 -spec find(Text, Offset, Limit, Context) -> {ok, Concepts} | {error, Reason} when

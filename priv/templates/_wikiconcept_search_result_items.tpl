@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-4">
             {% if c.wikidata_ancestor_ids %}
-                <p class="text-muted">{_ Part of _}</p>
+                <p class="text-muted">{_ Ascending concepts _}</p>
                 <ul class="wikiconcept__ancestors">
                 {% for anc in c.wikidata_ancestor_ids %}
                     <li>
@@ -38,6 +38,12 @@
                     </li>
                 {% endfor %}
                 </ul>
+            {% endif %}
+
+            {% if c.wikidata_id != text %}
+                <p class="text-muted wikiconcept__descendant">
+                    <a href="#{{ c.wikidata_id|escape }}">{_ Descending topics _} &gt;</a>
+                </p>
             {% endif %}
         </div>
     </div>

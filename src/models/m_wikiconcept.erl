@@ -25,6 +25,10 @@
     m_get/3,
     m_post/3,
 
+    connect_keyword/3,
+    disconnect_keyword/3,
+    list_connected_concepts/2,
+
     get_concept/2,
 
     insert_keyword/2,
@@ -71,12 +75,139 @@ m_get([ <<"find">>, Text | Rest ], _Msg, Context) ->
             {ok, {Concept, Rest}};
         {error, _} = Error ->
             Error
+    end;
+m_get([ <<"connected">>, RscId | Rest ], _Msg, Context) ->
+    {ok, Concepts} = list_connected_concepts(RscId, Context),
+    {ok, {Concepts, Rest}}.
+
+
+m_post([ <<"insert">>, <<"keyword">> ], #{ payload := #{ <<"wikidata">> := WikidataID } }, Context) ->
+    insert_keyword(WikidataID, Context);
+m_post([ <<"connect">> ],
+        #{
+            payload := #{
+                <<"wikidata">> := WikidataID,
+                <<"id">> := Id
+            }
+        },
+        Context) ->
+    case z_acl:rsc_editable(Id, Context) of
+        true ->
+            case m_rsc:is_a(Id, keyword, Context) of
+                true ->
+                    connect_keyword(WikidataID, Id, Context);
+                false ->
+                    {error, enoent}
+            end;
+        false ->
+            {error, eacces}
+    end;
+m_post([ <<"disconnect">> ],
+        #{
+            payload := #{
+                <<"wikidata">> := WikidataID,
+                <<"id">> := Id
+            }
+        },
+        Context) ->
+    case z_acl:rsc_editable(Id, Context) of
+        true ->
+            case m_rsc:is_a(Id, keyword, Context) of
+                true ->
+                    disconnect_keyword(WikidataID, Id, Context);
+                false ->
+                    {error, enoent}
+            end;
+        false ->
+            {error, eacces}
     end.
 
 
-m_post([ <<"insert">>, <<"keyword">> ], #{ payload := #{ <<"wikidata">> := WikiDataId } }, Context) ->
-    insert_keyword(WikiDataId, Context).
+%% @doc Connect or disconnect a keyword to a wikidata concept. Any earlier connection
+%% is overwritten.
+-spec connect_keyword(WikidataID, Id, Context) -> ok | {error, Reason} when
+    WikidataID :: binary() | string(),
+    Id :: m_rsc:resource() | undefined,
+    Context :: z:context(),
+    Reason :: enoent.
+connect_keyword(WikidataID, Id, Context) ->
+    WikidataID1 = unicode:characters_to_binary(WikidataID),
+    Id1 = m_rsc:rid(Id, Context),
+    PrevId = z_db:q1("
+        select keyword_id
+        from wikiconcept
+        where wikidata_id = $1",
+        [ WikidataID1 ],
+        Context),
+    case m_rsc:rid(Id, Context) of
+        PrevId ->
+            ok;
+        Id1 ->
+            case z_db:q("
+                update wikiconcept
+                set keyword_id = $1
+                where wikidata_id = $2",
+                [ Id1, WikidataID1 ],
+                Context)
+            of
+                1 ->
+                    publish_update(PrevId, Context),
+                    publish_update(Id1, Context),
+                    ok;
+                0 ->
+                    {error, enoent}
+            end
+    end.
 
+%% @doc Disconnect a keyword from a wikidata concept.
+-spec disconnect_keyword(WikidataID, Id, Context) -> ok | {error, Reason} when
+    WikidataID :: binary() | string(),
+    Id :: m_rsc:resource() | undefined,
+    Context :: z:context(),
+    Reason :: enoent.
+disconnect_keyword(WikidataID, Id, Context) ->
+    WikidataID1 = unicode:characters_to_binary(WikidataID),
+    case m_rsc:rid(Id, Context) of
+        undefined ->
+            {error, enoent};
+        Id1 ->
+            case z_db:q("
+                update wikiconcept
+                set keyword_id = null
+                where keyword_id = $1
+                  and wikidata_id = $2",
+                [ Id1, WikidataID1 ],
+                Context)
+            of
+                1 ->
+                    publish_update(Id1, Context),
+                    ok;
+                0 ->
+                    {error, enoent}
+            end
+    end.
+
+publish_update(undefined, _Context) ->
+    ok;
+publish_update(Id, Context) when is_integer(Id) ->
+    z_mqtt:publish(
+        [ <<"model">>, <<"rsc">>, <<"event">>, Id, <<"wikiconcept">> ],
+        #{},
+        Context).
+
+%% @doc List all concepts connected to a keyword.
+-spec list_connected_concepts(RscId, Context) -> {ok, Concepts} | {error, Reason} when
+    RscId :: m_rsc:resource(),
+    Context :: z:context(),
+    Concepts :: list( map() ),
+    Reason :: term().
+list_connected_concepts(RscId, Context) ->
+    z_db:qmap_props("
+        select *
+        from wikiconcept
+        where keyword_id = $1",
+        [ m_rsc:rid(RscId, Context) ],
+        Context).
 
 %% @doc Create a keyword for the given wikidata concept. The keyword is created in either the
 %% system content group or the default content group.

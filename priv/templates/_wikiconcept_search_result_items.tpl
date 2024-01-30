@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-8">
             <h4 class="wikiconcept__title">
-                <a href="#{{ c.wikidata_id }}" title="{_ Click to create this keyword _}">
+                <a href="#{{ c.wikidata_id }}" title="{_ Click to select this concept. _}">
                     {{ c.title|escape }}
                 </a>
             </h4>

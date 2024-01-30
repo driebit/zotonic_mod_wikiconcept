@@ -55,8 +55,10 @@
 
     {% javascript %}
         $("#wikiconcept-search-result")
-            .on('click', '.wikiconcept__ancestors a, .wikiconcept__descendant a', function() {
-                let wiki_id = $(this).attr('href').substr(1);
+            .on('click', '.wikiconcept__ancestors a, .wikiconcept__descendant a', function(e) {
+                e.preventDefault();
+
+                const wiki_id = $(this).attr('href').substr(1);
                 $('#wikiconcept-search').val(wiki_id).change();
             });
 

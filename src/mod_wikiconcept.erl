@@ -53,6 +53,21 @@ observe_search_query(#search_query{
             #search_result{
             }
     end;
+observe_search_query(#search_query{
+        name = <<"wikiconcept_descendant">>,
+        offsetlimit = {Offset, Limit},
+        args = Args
+    }, Context) ->
+    Concept = z_search:lookup_qarg_value(<<"concept">>, Args, <<>>),
+    case m_wikiconcept:find_descendant(Concept, Offset, Limit, Context) of
+        {ok, Concepts} ->
+            #search_result{
+                result = Concepts
+            };
+        {error, _} ->
+            #search_result{
+            }
+    end;
 observe_search_query(#search_query{ }, _Context) ->
     undefined.
 

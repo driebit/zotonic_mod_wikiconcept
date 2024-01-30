@@ -1,0 +1,125 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+# NB: Consider using poEdit <http://poedit.sourceforge.net>
+#
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-01-30 14:59+0100\n"
+"Last-Translator: Marc Worrell <marc@worrell.nl>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:33
+msgid "Ascending concepts"
+msgstr "Bovenliggende concepten"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:5
+msgid ""
+"Associate one or more Wikidata concepts with this keyword. This is useful "
+"for mapping keywords when exchanging data between sites."
+msgstr ""
+"Koppel een of meer Wikidata concepten aan dit trefwoord. Dit is handig "
+"voor het koppelen van trefwoorden bij het uitwisselen van gegevens tussen "
+"sites."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:6
+msgid "Click to select this concept."
+msgstr "Klik om dit concept te selecteren."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:15
+msgid "Connect Wikidata concept"
+msgstr "Wikidata-concept koppelen"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:20
+msgid "Connect a Wikidata concept"
+msgstr "Een Wikidata-concept koppelen"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:39
+msgid "Could not connect the concept."
+msgstr "Kon het concept niet koppelen."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:82
+msgid "Could not create the keyword."
+msgstr "Kon het trefwoord niet maken."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:11
+msgid "Create a keyword from the OpenAlex list of Wikipedia concepts."
+msgstr "Maak een trefwoord uit de OpenAlex-lijst van Wikipedia-concepten."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:9
+msgid ""
+"Create and connect a keyword from the OpenAlex list of Wikipedia concepts."
+msgstr ""
+"Maak en verbind een trefwoord uit de OpenAlex lijst van Wikipedia "
+"concepten."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24
+msgid "Descending concepts"
+msgstr "Onderliggende concepten"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:45
+msgid "Descending topics"
+msgstr "Onderliggende onderwerpen"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:7
+msgid "Disconnect"
+msgstr "Loskoppelen"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:7
+msgid "Disconnect this concept from the keyword."
+msgstr "Ontkoppel dit concept van het trefwoord."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:3
+msgid "Find a Wikiconcept to associate with this keyword."
+msgstr "Zoek een Wikiconcept om te koppelen aan dit trefwoord."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:7
+msgid "Nothing found."
+msgstr "Niets gevonden."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:27
+msgid "OpenAlex"
+msgstr "OpenAlex"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:17
+msgid "Set as URI"
+msgstr "Instellen als URI"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:6./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:15
+msgid "Type to search..."
+msgstr "Typ om te zoeken..."
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:26
+msgid "View at OpenAlex"
+msgstr "Bekijk op OpenAlex"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:23
+msgid "View at Wikidata"
+msgstr "Bekijk op Wikidata"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:19
+msgid "View at Wikipedia"
+msgstr "Bekijk op Wikipedia"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:24
+msgid "Wikidata"
+msgstr "Wikidata"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_tab.tpl:7
+msgid "Wikidata Concepts"
+msgstr "Wikidata Concepten"
+
+#: _build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:20
+msgid "Wikipedia"
+msgstr "Wikipedia"

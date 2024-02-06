@@ -32,6 +32,7 @@
     get_concept/2,
 
     insert_keyword/2,
+    find_keyword/2,
 
     find/2,
     find/4,
@@ -73,6 +74,13 @@ m_get([ <<"find">>, Text | Rest ], _Msg, Context) ->
     case get_concept(Text, Context) of
         {ok, Concept} ->
             {ok, {Concept, Rest}};
+        {error, _} = Error ->
+            Error
+    end;
+m_get([ <<"find_keyword">>, ConceptID | Rest ], _Msg, Context) ->
+    case find_keyword(ConceptID, Context) of
+        {ok, RscId} ->
+            {ok, {RscId, Rest}};
         {error, _} = Error ->
             Error
     end;
@@ -290,6 +298,73 @@ filter_lang(#trans{ tr = Tr }, Context) ->
     #trans{ tr = Tr2 }.
 
 
+%% @doc Find the keyword best matching to the given concept.
+%% First tries to find a keyword in the ascendants of a concept,
+%% then tries to find it in the descendents.
+-spec find_keyword(ConceptID, Context) -> {ok, KeywordRscId} | {error, Reason} when
+    ConceptID :: binary() | string(),
+    Context :: z:context(),
+    KeywordRscId :: m_rsc:resource_id(),
+    Reason :: term().
+find_keyword(ConceptID, Context) ->
+    case get_concept(ConceptID, Context) of
+        {ok, #{
+            <<"keyword_id">> := RscId
+        }} when is_integer(RscId) ->
+            {ok, RscId};
+        {ok, #{
+            <<"wikidata_id">> := WikidataID,
+            <<"wikidata_ancestor_ids">> := Ancestors
+        }} ->
+            case find_nearest_ancestor(Ancestors, Context) of
+                {ok, RscId} ->
+                    {ok, RscId};
+                {error, enoent} ->
+                    find_nearest_descendent(WikidataID, Context)
+            end;
+        {error, _} = Error ->
+            Error
+    end.
+
+find_nearest_ancestor(undefined, _Context) ->
+    {error, enoent};
+find_nearest_ancestor([], _Context) ->
+    {error, enoent};
+find_nearest_ancestor(Ancestors, Context) ->
+    case z_db:q1("
+        select keyword_id
+        from wikiconcept
+        where keyword_id is not null
+          and wikidata_id in (select(unnest($1::character varying[])))
+        order by level desc
+        limit 1",
+        [ Ancestors ],
+        Context)
+    of
+        undefined ->
+            {error, enoent};
+        RscId ->
+            {ok, RscId}
+    end.
+
+find_nearest_descendent(WikidataID, Context) ->
+    case z_db:q1("
+        select keyword_id
+        from wikiconcept
+        where keyword_id is not null
+          and wikidata_ancestor_ids && $1
+        order by level asc
+        limit 1",
+        [ [ WikidataID ] ],
+        Context)
+    of
+        undefined ->
+            {error, enoent};
+        RscId ->
+            {ok, RscId}
+    end.
+
+
 %% @doc Get a concept by URL or code.
 get_concept(<<"https://", _/binary>> = URL, Context) ->
     z_db:qmap_props_row("
@@ -314,6 +389,8 @@ get_concept(<<"q", ID/binary>>, Context) ->
     get_concept(<<"Q", ID/binary>>, Context);
 get_concept(<<"c", ID/binary>>, Context) ->
     get_concept(<<"C", ID/binary>>, Context);
+get_concept(ID, Context) when is_list(ID) ->
+    get_concept(unicode:characters_to_binary(ID, utf8), Context);
 get_concept(_, _Context) ->
     {error, enoent}.
 

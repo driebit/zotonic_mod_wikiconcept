@@ -1,4 +1,4 @@
-{# Panel for the wikiconcept tab #}
+{# Select wikidata concepts to connect with the keyword #}
 <div class="tab-pane">
     <p>{_ Find a Wikiconcept to associate with this keyword. _}</p>
 

@@ -33,6 +33,7 @@
 
     insert_keyword/2,
     find_keyword/2,
+    rsc_merge/3,
 
     find/2,
     find/4,
@@ -297,6 +298,25 @@ filter_lang(#trans{ tr = Tr }, Context) ->
     end,
     #trans{ tr = Tr2 }.
 
+
+%% @doc Handle the merge of two keywords. Merge all connected concepts.
+-spec rsc_merge(WinnerId, LoserId, Context) -> ok when
+    WinnerId :: m_rsc:resource_id(),
+    LoserId :: m_rsc:resource_id(),
+    Context :: z:context().
+rsc_merge(WinnerId, LoserId, Context) ->
+    case z_db:q("
+        update wikiconcept
+        set keyword_id = $1
+        where keyword_id = $2",
+        [ WinnerId, LoserId ],
+        Context)
+    of
+        0 ->
+            ok;
+        Count when is_integer(Count) ->
+            publish_update(WinnerId, Context)
+    end.
 
 %% @doc Find the keyword best matching to the given concept.
 %% First tries to find a keyword in the ascendants of a concept,

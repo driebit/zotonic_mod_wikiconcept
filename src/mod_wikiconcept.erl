@@ -82,12 +82,13 @@ event(#postback_notify{
         trigger = <<"wikiconcept-search">>,
         target = TargetId
     }, Context) ->
+    Text = z_convert:to_binary(z_context:get_q(<<"triggervalue">>, Context)),
     Context1 = z_render:update(
         "wikiconcept-search-result",
         #render{
             template = "_wikiconcept_search_result.tpl",
             vars = [
-                {text, z_context:get_q(<<"triggervalue">>, Context )},
+                {text, z_string:trim(Text)},
                 {target, TargetId}
             ]
         },

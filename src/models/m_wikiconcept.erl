@@ -453,11 +453,11 @@ find_descendant(Concept, Offset, Limit, Context) ->
             z_db:qmap_props("
                 select *
                 from wikiconcept
-                where level = $1
-                  and wikidata_ancestor_ids && $2
-                order by wikidata_id
+                where wikidata_ancestor_ids && $1
+                  and level = $2
+                order by display_name, wikidata_id
                 offset $3 limit $4",
-                [ Level + 1, [ WikidataID ], Offset-1, Limit ],
+                [ [ WikidataID ], Level+1, Offset-1, Limit ],
                 Context);
         {ok, []} ->
             {ok, []};

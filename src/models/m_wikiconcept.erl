@@ -355,7 +355,7 @@ find_nearest_ancestor(Ancestors, Context) ->
         select keyword_id
         from wikiconcept
         where keyword_id is not null
-          and wikidata_id in (select(unnest($1::character varying[])))
+          and wikidata_id = any($1::character varying[])
         order by level desc
         limit 1",
         [ Ancestors ],
@@ -372,7 +372,7 @@ find_nearest_descendent(WikidataID, Context) ->
         select keyword_id
         from wikiconcept
         where keyword_id is not null
-          and wikidata_ancestor_ids && $1
+          and wikidata_ancestor_ids && $1::character varying[]
         order by level asc
         limit 1",
         [ [ WikidataID ] ],

@@ -3,13 +3,12 @@
     <p>{_ Find a Wikiconcept to associate with this keyword. _}</p>
 
     <div class="form-group">
-        <input class="form-control do_autofocus" type="text" name="qtext" value="" id="wikiconcept-search" placeholder="{_ Type to search... _}">
+        <input class="form-control do_autofocus" type="text" name="qtext"
+               value="{{ id.title }}" id="wikiconcept-search" placeholder="{_ Type to search... _}">
     </div>
 
     <div id="wikiconcept-search-result" class="do_feedback"
         data-feedback="trigger: 'wikiconcept-search', delegate: 'mod_wikiconcept'">
-
-        {% include "_wikiconcept_search_result.tpl" %}
     </div>
 
     {% javascript %}
@@ -42,5 +41,7 @@
 
             wc.effect("highlight");
         });
+
+        $('#wikiconcept-search').change();
     {% endjavascript %}
 </div>

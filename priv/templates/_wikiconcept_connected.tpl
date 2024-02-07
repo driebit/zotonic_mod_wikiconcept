@@ -3,14 +3,14 @@
     {% for concept in m.wikiconcept.connected[id] %}
         {% with forloop.counter as nr %}
         <li>
-            <b>{{ concept.title }}</b>
+            <b>{{ concept.title|escape }}</b>
             <button id="{{ #d.nr }}" class="btn btn-default btn-xs" title="{_ Disconnect this concept from the keyword. _}">{_ Disconnect _}</button>
             <br>
             <p>
-                {{ concept.summary }}<br>
-                <a href="{{ concept.wikidata }}" target="_blank">
+                {% if concept.summary as summary %}{{ summary|escape }}<br>{% endif %}
+                <a href="{{ concept.wikidata|escape }}" target="_blank">
                     <small>
-                        <tt>{{ concept.wikidata }}</tt>
+                        <tt>{{ concept.wikidata|escape }}</tt>
                         <i class="fa fa-external-link" aria-hidden="true"></i>
                     </small>
                 </a>

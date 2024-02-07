@@ -3,9 +3,13 @@
     <div class="row">
         <div class="col-md-8">
             <h4 class="wikiconcept__title">
-                <a href="#{{ c.wikidata_id }}" title="{_ Click to select this concept. _}">
+                <a href="#{{ c.wikidata_id|escape }}" title="{_ Click to view concepts below _}">
                     {{ c.title|escape }}
                 </a>
+
+                <button class="btn btn-xs btn-default">
+                    {_ Select _}
+                </button>
             </h4>
 
             {% if c.summary %}
@@ -38,12 +42,6 @@
                     </li>
                 {% endfor %}
                 </ul>
-            {% endif %}
-
-            {% if c.wikidata_id != text %}
-                <p class="text-muted wikiconcept__descendant">
-                    <a href="#{{ c.wikidata_id|escape }}">{_ Descending concepts _} &gt;</a>
-                </p>
             {% endif %}
         </div>
     </div>

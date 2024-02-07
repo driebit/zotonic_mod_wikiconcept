@@ -31,6 +31,7 @@
 
 -export([
     observe_search_query/2,
+    observe_rsc_merge/2,
 
     event/2,
 
@@ -71,17 +72,23 @@ observe_search_query(#search_query{
 observe_search_query(#search_query{ }, _Context) ->
     undefined.
 
+
+%% @doc Handle the merger of two keywords.
+observe_rsc_merge(#rsc_merge{ winner_id = WinnerId, loser_id = LoserId }, Context) ->
+    m_wikiconcept:rsc_merge(WinnerId, LoserId, Context).
+
 event(#postback_notify{
         message = <<"feedback">>,
         trigger = <<"wikiconcept-search">>,
         target = TargetId
     }, Context) ->
+    Text = z_convert:to_binary(z_context:get_q(<<"triggervalue">>, Context)),
     Context1 = z_render:update(
         "wikiconcept-search-result",
         #render{
             template = "_wikiconcept_search_result.tpl",
             vars = [
-                {text, z_context:get_q(<<"triggervalue">>, Context )},
+                {text, z_string:trim(Text)},
                 {target, TargetId}
             ]
         },

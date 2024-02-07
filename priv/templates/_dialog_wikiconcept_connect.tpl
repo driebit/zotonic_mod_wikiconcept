@@ -1,27 +1,26 @@
-{# Panel for the wikiconcept tab #}
+{# Select wikidata concepts to connect with the keyword #}
 <div class="tab-pane">
     <p>{_ Find a Wikiconcept to associate with this keyword. _}</p>
 
     <div class="form-group">
-        <input class="form-control do_autofocus" type="text" name="qtext" value="" id="wikiconcept-search" placeholder="{_ Type to search... _}">
+        <input class="form-control do_autofocus" type="text" name="qtext"
+               value="{{ id.title }}" id="wikiconcept-search" placeholder="{_ Type to search... _}">
     </div>
 
     <div id="wikiconcept-search-result" class="do_feedback"
         data-feedback="trigger: 'wikiconcept-search', delegate: 'mod_wikiconcept'">
-
-        {% include "_wikiconcept_search_result.tpl" %}
     </div>
 
     {% javascript %}
         $("#wikiconcept-search-result")
-            .on('click', '.wikiconcept__ancestors a, .wikiconcept__descendant a', function(e) {
+            .on('click', '.wikiconcept__ancestors a, .wikiconcept__title a', function(e) {
                 e.preventDefault();
 
                 const wiki_id = $(this).attr('href').substr(1);
                 $('#wikiconcept-search').val(wiki_id).change();
             });
 
-        $("#wikiconcept-search-result").on('click', '.wikiconcept__title a', function(e) {
+        $("#wikiconcept-search-result").on('click', 'button', function(e) {
             e.preventDefault();
 
             const wc = $(this).closest('.wikiconcept');
@@ -42,5 +41,7 @@
 
             wc.effect("highlight");
         });
+
+        $('#wikiconcept-search').change();
     {% endjavascript %}
 </div>

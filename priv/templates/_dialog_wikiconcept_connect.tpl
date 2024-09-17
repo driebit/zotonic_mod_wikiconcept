@@ -8,7 +8,7 @@
     </div>
 
     <div id="wikiconcept-search-result" class="do_feedback"
-        data-feedback="trigger: 'wikiconcept-search', delegate: 'mod_wikiconcept'">
+        data-feedback='{ "trigger": "wikiconcept-search", "delegate": "mod_wikiconcept" }'>
     </div>
 
     {% javascript %}

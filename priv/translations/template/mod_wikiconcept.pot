@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:33
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:37
 msgid ""
 "Ascending concepts"
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 
 #: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:6
 msgid ""
-"Click to select this concept."
+"Click to view concepts below"
 msgstr ""
 ""
 
@@ -49,7 +49,7 @@ msgid ""
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:39
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:38
 msgid ""
 "Could not connect the concept."
 msgstr ""
@@ -74,7 +74,7 @@ msgid ""
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:45
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24
 msgid ""
 "Descending concepts"
 msgstr ""
@@ -104,9 +104,15 @@ msgid ""
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:27
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:31
 msgid ""
 "OpenAlex"
+msgstr ""
+""
+
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:11
+msgid ""
+"Select"
 msgstr ""
 ""
 
@@ -116,31 +122,31 @@ msgid ""
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:6./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:15
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:7./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:15
 msgid ""
 "Type to search..."
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:26
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:30
 msgid ""
 "View at OpenAlex"
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:23
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:27
 msgid ""
 "View at Wikidata"
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:19
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:23
 msgid ""
 "View at Wikipedia"
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:24
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:28
 msgid ""
 "Wikidata"
 msgstr ""
@@ -152,7 +158,7 @@ msgid ""
 msgstr ""
 ""
 
-#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:20
+#: ./_build/default/lib/zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:24
 msgid ""
 "Wikipedia"
 msgstr ""

@@ -51,7 +51,7 @@
     openalex_search/3,
 
     load/1,
-    update_task/1,
+    load/2,
     install/1,
     install_data/1
     ]).
@@ -628,12 +628,6 @@ openalex_search(Q, Page, Context) ->
     ],
     z_fetch:fetch_json(get, ?OPENALEX_CONCEPTS_URL, Args, [], Context).
 
-
-%% @doc Ensure that all wiki concepts are loaded and updated.
-%% @todo Only fetch the concepts that have been updated.
-update_task(Context) ->
-    load(Context).
-
 %% @doc Fetch all wiki concepts and store them into our database table for
 %% easy searching and connection to keyword resources.
 load(Context) ->
@@ -642,11 +636,7 @@ load(Context) ->
 load({ok, {Cs, done}}, Context) ->
     load_1(Cs, Context);
 load({ok, {Cs, Cursor}}, Context) ->
-    z_db:transaction(
-        fun(Ctx) ->
-            load_1(Cs, Ctx)
-        end,
-        Context),
+    load_1(Cs, Context),
     ?LOG_INFO(#{
         in => zotonic_mod_wikiconcept,
         text => <<"Updated wiki concepts">>,
@@ -794,73 +784,70 @@ ensure_trans(#trans{ tr = S }, #trans{ tr = T }) ->
 install(Context) ->
     case z_db:table_exists(wikiconcept, Context) of
         true ->
-            ok;
+            z_db:drop_table(wikiconcept_name, Context),
+            z_db:drop_table(wikiconcept, Context);
         false ->
-            [] = z_db:q("create extension if not exists pg_trgm with schema public", Context),
-            [] = z_db:q("
-                create table wikiconcept (
-                    id serial not null,
-                    level integer not null default 0,
-
-                    openalex character varying(128) not null,
-                    wikidata character varying(128) not null,
-                    wikipedia character varying(200),
-                    mag character varying(64),
-
-                    wikidata_id character varying(16) not null,
-                    wikidata_ancestor_ids character varying(16)[],
-
-                    display_name character varying(128),
-                    image_thumbnail_url character varying(1000),
-                    image_url character varying(1000),
-
-                    props_json bytea,
-
-                    keyword_id integer,
-
-                    modified timestamp with time zone NOT NULL DEFAULT now(),
-
-                    constraint wikiconcept_pkey primary key (id),
-                    constraint wikiconcept_openalex_key unique (openalex),
-                    constraint wikiconcept_wikidata_key unique (wikidata),
-                    constraint wikiconcept_wikidata_id_key unique (wikidata_id)
-                )", Context),
-
-            [] = z_db:q("
-                create table wikiconcept_name (
-                    id serial not null,
-                    name character varying(1000)
-                )", Context),
-
-            [] = z_db:q("
-                alter table wikiconcept_name add constraint fk_wikiconcept_name_id foreign key (id)
-                references wikiconcept (id)
-                on update cascade on delete cascade", Context),
-
-            [] = z_db:q("
-                alter table wikiconcept add constraint fk_wikiconcept_keyword_id foreign key (keyword_id)
-                references rsc (id)
-                on update cascade on delete set null", Context),
-            [] = z_db:q("create index fki_wikiconcept_keyword_id ON wikiconcept (keyword_id)", Context),
-
-            [] = z_db:q("create index wikiconcept_mag_key on wikiconcept (mag)", Context),
-            [] = z_db:q("create index wikiconcept_wikipedia_key on wikiconcept (wikipedia)", Context),
-
-            [] = z_db:q("
-                create index wikiconcept_name_name ON wikiconcept_name
-                USING GIN (name public.gin_trgm_ops)", Context),
-
-            z_db:flush(Context),
             ok
-    end.
+    end,
+    [] = z_db:q("create extension if not exists pg_trgm with schema public", Context),
+    [] = z_db:q("
+        create table wikiconcept (
+            id serial not null,
+            level integer not null default 0,
+
+            openalex character varying(128) not null,
+            wikidata character varying(128) not null,
+            wikipedia character varying(200),
+            mag character varying(64),
+
+            wikidata_id character varying(16) not null,
+            wikidata_ancestor_ids character varying(16)[],
+
+            display_name character varying(128),
+            image_thumbnail_url character varying(1000),
+            image_url character varying(1000),
+
+            props_json jsonb,
+
+            keyword_id integer,
+
+            modified timestamp with time zone NOT NULL DEFAULT now(),
+
+            constraint wikiconcept_pkey primary key (id),
+            constraint wikiconcept_openalex_key unique (openalex),
+            constraint wikiconcept_wikidata_key unique (wikidata),
+            constraint wikiconcept_wikidata_id_key unique (wikidata_id)
+        )", Context),
+
+    [] = z_db:q("
+        create table wikiconcept_name (
+            id serial not null,
+            name character varying(1000)
+        )", Context),
+
+    [] = z_db:q("
+        alter table wikiconcept_name add constraint fk_wikiconcept_name_id foreign key (id)
+        references wikiconcept (id)
+        on update cascade on delete cascade", Context),
+
+    [] = z_db:q("
+        alter table wikiconcept add constraint fk_wikiconcept_keyword_id foreign key (keyword_id)
+        references rsc (id)
+        on update cascade on delete set null", Context),
+    [] = z_db:q("create index fki_wikiconcept_keyword_id ON wikiconcept (keyword_id)", Context),
+
+    [] = z_db:q("create index wikiconcept_mag_key on wikiconcept (mag)", Context),
+    [] = z_db:q("create index wikiconcept_wikipedia_key on wikiconcept (wikipedia)", Context),
+
+    [] = z_db:q("
+        create index wikiconcept_name_name ON wikiconcept_name
+        USING GIN (name public.gin_trgm_ops)", Context),
+
+    z_db:flush(Context),
+    ok.
 
 %% @doc Ensure that the wikiconcepts are loaded into the local table. They are downloaded from OpenAlex
 %% using their public API.
 install_data(Context) ->
-    case z_db:q1("select count(*) from wikiconcept", Context) of
-        0 ->
-            z_pivot_rsc:insert_task(?MODULE, update_task, <<>>, Context);
-        _ ->
-            ok
-    end.
-
+    {ok, _} = z_pivot_rsc:insert_task(m_wikiconcept, load, <<>>, Context),
+    ok.

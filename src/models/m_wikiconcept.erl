@@ -28,6 +28,8 @@
     connect_keyword/3,
     disconnect_keyword/3,
     list_connected_concepts/2,
+    list_all_concepts/3,
+    count_all_concepts/1,
 
     get_concept/2,
 
@@ -87,8 +89,14 @@ m_get([ <<"find_keyword">>, ConceptID | Rest ], _Msg, Context) ->
     end;
 m_get([ <<"connected">>, RscId | Rest ], _Msg, Context) ->
     {ok, Concepts} = list_connected_concepts(RscId, Context),
-    {ok, {Concepts, Rest}}.
-
+    {ok, {Concepts, Rest}};
+m_get([ <<"list_all">> | Rest ], _Msg, Context) ->
+    PageSize = z_convert:to_integer(z_context:get_q(<<"pagelen">>, Context, <<"50">>)),
+    PageNum = z_convert:to_integer(z_context:get_q(<<"page">>, Context, <<"1">>)),
+    {ok, Concepts} = list_all_concepts(PageNum, PageSize, Context),
+    {ok, {Concepts, Rest}};
+m_get([ <<"total">> | Rest ], _Msg, Context) ->
+    {ok, {count_all_concepts(Context), Rest}}.
 
 m_post([ <<"insert">>, <<"keyword">> ], #{ payload := #{ <<"wikidata">> := WikidataID } }, Context) ->
     insert_keyword(WikidataID, Context);
@@ -217,6 +225,21 @@ list_connected_concepts(RscId, Context) ->
         where keyword_id = $1",
         [ m_rsc:rid(RscId, Context) ],
         Context).
+
+list_all_concepts(PageNum, PageSize, Context) ->
+    Offset = PageSize * (PageNum - 1),
+    z_db:qmap_props("
+        select *
+        from wikiconcept
+        order by id asc
+        offset $1
+        limit $2",
+        [ Offset, PageSize ],
+        Context
+    ).
+
+count_all_concepts(Context) ->
+    z_db:q1("SELECT count(*) FROM wikiconcept", Context).
 
 %% @doc Create a keyword for the given wikidata concept. The keyword is created in either the
 %% system content group or the default content group.

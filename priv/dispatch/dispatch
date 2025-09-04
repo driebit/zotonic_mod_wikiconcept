@@ -1,0 +1,5 @@
+%% -*- mode: erlang -*-
+[
+  % Admin view
+  {admin_wikiconcepts,  ["admin", "wikiconcepts"], controller_admin, [{template, "admin_wikiconcepts.tpl"}, seo_noindex]}
+].

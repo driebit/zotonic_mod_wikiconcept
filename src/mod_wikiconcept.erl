@@ -93,7 +93,14 @@ event(#postback_notify{
             ]
         },
         Context),
-    z_render:wire({remove_class, [{target, TargetId}, {class, "loading"}]}, Context1).
+    z_render:wire({remove_class, [{target, TargetId}, {class, "loading"}]}, Context1);
+event(#postback{message={reimport, _}}, Context) ->
+    case z_pivot_rsc:insert_task(m_wikiconcept, load, <<>>, Context) of
+        {ok, _} ->
+            z_render:growl(?__("A task to (re)import wikiconcept has started. Check the admin status page for progress.", Context), Context);
+        _ ->
+            z_render:growl_error(?__("Sorry, a reimport couldn't be started.", Context), Context)
+    end.
 
 manage_schema(_Version, Context) ->
     m_wikiconcept:install(Context).

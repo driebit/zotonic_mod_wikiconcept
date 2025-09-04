@@ -132,8 +132,8 @@ m_post([ <<"disconnect">> ],
     end.
 
 
-%% @doc Connect or disconnect a keyword to a wikidata concept. Any earlier connection
-%% is overwritten.
+%% @doc Connect a keyword to a wikidata concept.
+%% Any earlier connection is overwritten.
 -spec connect_keyword(WikidataID, Id, Context) -> ok | {error, Reason} when
     WikidataID :: binary() | string(),
     Id :: m_rsc:resource() | undefined,
@@ -232,7 +232,7 @@ insert_keyword(ConceptID, Context) ->
             {ok, Id};
         {ok, #{
             <<"id">> := CId,
-            <<"title">> := TitleAll,
+            <<"display_name">> := TitleAll,
             <<"wikidata">> := WikiDataURI
         } = Concept} ->
             Title = filter_lang(TitleAll, Context),
@@ -282,6 +282,8 @@ insert_keyword(ConceptID, Context) ->
 langs(#trans{ tr = Tr }) ->
     [ Iso || {Iso, _} <- Tr ].
 
+filter_lang(undefined, _Context) ->
+    undefined;
 filter_lang(#trans{ tr = Tr }, Context) ->
     Editable = z_language:editable_language_codes(Context),
     Tr1 = lists:filter(
@@ -296,7 +298,9 @@ filter_lang(#trans{ tr = Tr }, Context) ->
         _ ->
             Tr1
     end,
-    #trans{ tr = Tr2 }.
+    #trans{ tr = Tr2 };
+filter_lang(Text, _Context) when is_binary(Text) ->
+    #trans{ tr = [{en, Text}] }.
 
 
 %% @doc Handle the merge of two keywords. Merge all connected concepts.

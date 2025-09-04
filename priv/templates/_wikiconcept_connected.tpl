@@ -1,9 +1,8 @@
-{% comment %}{% print m.wikiconcept.connected[id] %}{% endcomment %}
 <ol>
     {% for concept in m.wikiconcept.connected[id] %}
         {% with forloop.counter as nr %}
         <li>
-            <b>{{ concept.title|escape }}</b>
+            <b>{{ concept.display_name|escape }}</b>
             <button id="{{ #d.nr }}" class="btn btn-default btn-xs" title="{_ Disconnect this concept from the keyword. _}">{_ Disconnect _}</button>
             <br>
             <p>

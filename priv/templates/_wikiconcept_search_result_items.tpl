@@ -4,7 +4,7 @@
         <div class="col-md-8">
             <h4 class="wikiconcept__title">
                 <a href="#{{ c.wikidata_id|escape }}" title="{_ Click to view concepts below _}">
-                    {{ c.title|escape }}
+                    {{ c.display_name|escape }}
                 </a>
 
                 <button class="btn btn-xs btn-default">
@@ -38,7 +38,7 @@
                 <ul class="wikiconcept__ancestors">
                 {% for anc in c.wikidata_ancestor_ids %}
                     <li>
-                        <a href="#{{ anc|escape }}">{{ m.wikiconcept.id[anc].title|escape }}</a>
+                        <a href="#{{ anc|escape }}">{{ m.wikiconcept.id[anc].display_name|escape }}</a>
                     </li>
                 {% endfor %}
                 </ul>

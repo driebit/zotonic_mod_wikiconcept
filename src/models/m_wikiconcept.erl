@@ -816,8 +816,9 @@ install(Context) ->
         false ->
             ok
     end,
-    [] = z_db:q("drop extension if exists pg_trgm", Context),
-    [] = z_db:q("create extension pg_trgm with schema public", Context),
+    % The pg_trgm extension can only created once per database, so we
+    % create it in the public schema and the refer to that schema.
+    [] = z_db:q("create extension if not exists pg_trgm with schema public", Context),
     [] = z_db:q("
         create table wikiconcept (
             id serial not null,

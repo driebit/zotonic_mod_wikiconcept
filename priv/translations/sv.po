@@ -1,0 +1,251 @@
+# Translations for zotonic_mod_wikiconcept.
+msgid ""
+msgstr ""
+"Project-Id-Version: zotonic_mod_wikiconcept\n"
+"PO-Revision-Date: 2026-10-22 13:30+0200\n"
+"Last-Translator: Zotonic contributors\n"
+"Language-Team: sv\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:190
+msgid "A task to (re)import wikiconcept has started. Check the admin status page for progress."
+msgstr "En uppgift för import eller återimport av Wikiconcept har startats. Följ förloppet på administrationens statussida."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:62
+msgid "Ancestor concepts"
+msgstr "Överordnade begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:37
+msgid "Ascending concepts"
+msgstr "Överordnade begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:5
+msgid "Associate one or more Wikidata concepts with this keyword. This is useful for mapping keywords when exchanging data between sites."
+msgstr "Koppla ett eller flera Wikidata-begrepp till detta nyckelord. Det underlättar matchning av nyckelord vid datautbyte mellan webbplatser."
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:6
+msgid "Click to view concepts below"
+msgstr "Klicka för att visa underordnade begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:105
+msgid "Close"
+msgstr "Stäng"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:29
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:182
+msgid "Concept information"
+msgstr "Begreppsinformation"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:97
+msgid "Concept not found."
+msgstr "Begreppet hittades inte."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:15
+msgid "Connect Wikidata concept"
+msgstr "Koppla Wikidata-begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:20
+msgid "Connect a Wikidata concept"
+msgstr "Koppla ett Wikidata-begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:38
+msgid "Could not connect the concept."
+msgstr "Det gick inte att koppla begreppet."
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:82
+msgid "Could not create the keyword."
+msgstr "Det gick inte att skapa nyckelordet."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:79
+msgid "Create a keyword"
+msgstr "Skapa ett nyckelord"
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:11
+msgid "Create a keyword from the OpenAlex list of Wikipedia concepts."
+msgstr "Skapa ett nyckelord från OpenAlex-listan över Wikipedia-begrepp."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:81
+msgid "Create a keyword using this concept’s title and summary. Choose a keyword category below. The new keyword will be published and connected to this concept."
+msgstr "Skapa ett nyckelord med begreppets titel och sammanfattning. Välj en nyckelordskategori nedan. Det nya nyckelordet publiceras och kopplas till detta begrepp."
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:9
+msgid "Create and connect a keyword from the OpenAlex list of Wikipedia concepts."
+msgstr "Skapa och koppla ett nyckelord från OpenAlex-listan över Wikipedia-begrepp."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:92
+msgid "Create keyword"
+msgstr "Skapa nyckelord"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24
+msgid "Descending concepts"
+msgstr "Underordnade begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:6
+msgid "Disconnect"
+msgstr "Koppla från"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:6
+msgid "Disconnect this concept from the keyword."
+msgstr "Koppla från detta begrepp från nyckelordet."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:3
+msgid "Find a Wikiconcept to associate with this keyword."
+msgstr "Hitta ett Wikiconcept att koppla till detta nyckelord."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:6
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:34
+msgid "Keyword"
+msgstr "Nyckelord"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:83
+msgid "Keyword category"
+msgstr "Nyckelordskategori"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:8
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:45
+msgid "Last modified"
+msgstr "Senast ändrad"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:13
+msgid "Level"
+msgstr "Nivå"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:7
+msgid "Name"
+msgstr "Namn"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:64
+msgid "No concepts found."
+msgstr "Inga begrepp hittades."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:24
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:21
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:30
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:41
+msgid "None"
+msgstr "Inga"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:7
+msgid "Nothing found."
+msgstr "Inget hittades."
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:31
+msgid "OpenAlex"
+msgstr "OpenAlex"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:11
+msgid "OpenAlex URL"
+msgstr "OpenAlex-URL"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_status.tpl:5
+msgid "Reimport wikiconcepts"
+msgstr "Importera Wikiconcepts igen"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:18
+msgid "Search by name, Wikidata ID, OpenAlex ID or URL"
+msgstr "Sök efter namn, Wikidata-ID, OpenAlex-ID eller URL"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:15
+msgid "Search concepts"
+msgstr "Sök begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:11
+msgid "Select"
+msgstr "Välj"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:16
+msgid "Set as URI"
+msgstr "Ange som URI"
+
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:192
+msgid "Sorry, a reimport couldn't be started."
+msgstr "Det gick tyvärr inte att starta återimporten."
+
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:185
+msgid "Sorry, the keyword could not be created in this category."
+msgstr "Det gick tyvärr inte att skapa nyckelordet i denna kategori."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:25
+msgid "Summary languages"
+msgstr "Sammanfattningens språk"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:16
+msgid "Title languages"
+msgstr "Titelns språk"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:9
+msgid "To link or import concepts, use the Advanced section on a keyword’s edit page or the new media dialog."
+msgstr "För att koppla eller importera begrepp, använd avsnittet Avancerat på nyckelordets redigeringssida eller dialogrutan för nya medier."
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:8
+msgid "Total imported concepts:"
+msgstr "Totalt antal importerade begrepp:"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_status.tpl:10
+msgid "Trigger a reimport of wikiconcepts from the OpenAlex API."
+msgstr "Starta en återimport av Wikiconcepts från OpenAlex API."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:7
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:15
+msgid "Type to search..."
+msgstr "Skriv för att söka..."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:39
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:48
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:57
+msgid "Unknown"
+msgstr "Okänd"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:30
+msgid "View at OpenAlex"
+msgstr "Visa på OpenAlex"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:27
+msgid "View at Wikidata"
+msgstr "Visa på Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:23
+msgid "View at Wikipedia"
+msgstr "Visa på Wikipedia"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:3
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:7
+msgid "WikiConcepts Overview"
+msgstr "WikiConcepts-översikt"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:28
+msgid "Wikidata"
+msgstr "Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_tab.tpl:7
+msgid "Wikidata Concepts"
+msgstr "Wikidata-begrepp"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:10
+msgid "Wikidata ID"
+msgstr "Wikidata-ID"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:10
+msgid "Wikidata URL"
+msgstr "Wikidata-URL"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:24
+msgid "Wikipedia"
+msgstr "Wikipedia"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:9
+msgid "Wikipedia URL"
+msgstr "Wikipedia-URL"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:101
+msgid "You do not have permission to view this information."
+msgstr "Du har inte behörighet att visa denna information."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:32
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:46
+msgid "d M Y, H:i"
+msgstr "Y-m-d, H:i"

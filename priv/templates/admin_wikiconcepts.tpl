@@ -4,84 +4,37 @@
 
 {% block content %}
     <div class="admin-header">
-        <h2>WikiConcepts Overview</h2>
-        <p>This is a simple list of all imported wikiconcepts, for a total of: <strong>{{ m.wikiconcept.total }}</strong></p>
-        <p>To search, navigate, link and import concepts use either the 'Advanced' section in any keyword's edit page or to the dialog for new media items.</p>
-
+        <h2>{_ WikiConcepts Overview _}</h2>
+        <p>{_ Total imported concepts: _} <strong>{{ m.wikiconcept.total }}</strong></p>
+        <p>{_ To link or import concepts, use the Advanced section on a keyword’s edit page or the new media dialog. _}</p>
     </div>
 
-    {% with m.wikiconcept.list_all as concepts %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th width="5%">{_ Keyword _}</th>
-                    <th width="10%">{_ Name _}</th>
-                    <th width="10%">{_ Last modified _}</th>
-                    <th width="25%">{_ Wikipedia URL _}</th>
-                    <th width="25%">{_ Wikidata URL _}</th>
-                    <th width="25%">{_ OpenAlex URL _}</th>
-                </tr>
-            </thead>
+    {% wire id=#search_form type="submit" action={script script=""} %}
+    <form id="{{ #search_form }}" role="search" method="get" action="{% url admin_wikiconcepts %}">
+        <div class="form-group">
+            <label for="{{ #search }}">{_ Search concepts _}</label>
+            <input id="{{ #search }}" type="search" name="text" class="form-control"
+                   value="{{ q.text|escape }}" autocomplete="off"
+                   placeholder="{_ Search by name, Wikidata ID, OpenAlex ID or URL _}">
+            <input type="hidden" name="page" value="1">
+        </div>
+    </form>
 
-            <tbody>
-            {% for concept in concepts %}
-                <tr data-href="">
-                    <td>
-                        {% if concept.keyword_id %}
-                            <a href="{% url admin_edit_rsc id=concept.keyword_id %}">
-                                #{{ concept.keyword_id }}
-                            </a>
-                        {% else %}
-                            <em>{_ None _}</em>
-                        {% endif %}
-                    </td>
-                    <td>{{ concept.display_name }}</td>
-                    <td>{{ concept.modified|date:_"d M Y, H:i" }}</td>
-                    <td>
-                        {% if concept.wikipedia %}
-                            <a href="{{ concept.wikipedia|escape }}">
-                                {{ concept.wikipedia|escape }}
-                            </a>
-                        {% else %}
-                            <em>{_ Unknown _}</em>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if concept.wikidata %}
-                            <a href="{{ concept.wikidata|escape }}">
-                                {{ concept.wikidata|escape }}
-                            </a>
-                        {% else %}
-                            <em>{_ Unknown _}</em>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if concept.openalex %}
-                            <a href="{{ concept.openalex|escape }}">
-                                {{ concept.openalex|escape }}
-                            </a>
-                        {% else %}
-                            <em>{_ Unknown _}</em>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6">
-                        {_ None _}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <ul class="pagination pagination-centered">
-            {% with q.page|default:1 as current_page %}
-                {% for nr in (current_page - 3)|max:1|range:(current_page + 9) %}
-                    <li {% if nr == current_page %}class="active"{% endif %}>
-                        <a href="?page={{ nr }}">{{ nr }}</a>
-                    </li>
-                {% endfor %}
-            {% endwith %}
-        </ul>
-    {% endwith %}
+    <div id="wikiconcepts-results" class="do_feedback" aria-live="polite"
+         data-feedback='{ "trigger": "{{ #search_form }}", "template": "_admin_wikiconcepts_results.tpl" }'>
+        {% include "_admin_wikiconcepts_results.tpl" %}
+    </div>
+
+    {% wire name="wikiconcept-info"
+            action={dialog_open title=_"Concept information" template="_dialog_wikiconcept_info.tpl"}
+    %}
+    {% javascript %}
+        document.getElementById('wikiconcepts-results').addEventListener('click', function(event) {
+            const row = event.target.closest('tr[data-wikiconcept]');
+            if (!row || event.target.closest('a')) {
+                return;
+            }
+            z_event('wikiconcept-info', { wikidata_id: row.dataset.wikiconcept });
+        });
+    {% endjavascript %}
 {% endblock %}

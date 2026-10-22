@@ -1,0 +1,251 @@
+# Translations for zotonic_mod_wikiconcept.
+msgid ""
+msgstr ""
+"Project-Id-Version: zotonic_mod_wikiconcept\n"
+"PO-Revision-Date: 2026-10-22 13:30+0200\n"
+"Last-Translator: Zotonic contributors\n"
+"Language-Team: pt-br\n"
+"Language: pt-br\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:190
+msgid "A task to (re)import wikiconcept has started. Check the admin status page for progress."
+msgstr "Foi iniciada uma tarefa de importação ou reimportação de Wikiconcept. Consulte o progresso na página de status da administração."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:62
+msgid "Ancestor concepts"
+msgstr "Conceitos ascendentes"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:37
+msgid "Ascending concepts"
+msgstr "Conceitos ascendentes"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:5
+msgid "Associate one or more Wikidata concepts with this keyword. This is useful for mapping keywords when exchanging data between sites."
+msgstr "Associe um ou mais conceitos Wikidata a esta palavra-chave. Isso facilita a correspondência de palavras-chave na troca de dados entre sites."
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:6
+msgid "Click to view concepts below"
+msgstr "Clique para ver os conceitos descendentes"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:105
+msgid "Close"
+msgstr "Fechar"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:29
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:182
+msgid "Concept information"
+msgstr "Informações sobre o conceito"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:97
+msgid "Concept not found."
+msgstr "Conceito não encontrado."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:15
+msgid "Connect Wikidata concept"
+msgstr "Associar conceito Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_edit_content_advanced.keyword.tpl:20
+msgid "Connect a Wikidata concept"
+msgstr "Associar um conceito Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:38
+msgid "Could not connect the concept."
+msgstr "Não foi possível associar o conceito."
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:82
+msgid "Could not create the keyword."
+msgstr "Não foi possível criar a palavra-chave."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:79
+msgid "Create a keyword"
+msgstr "Criar uma palavra-chave"
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:11
+msgid "Create a keyword from the OpenAlex list of Wikipedia concepts."
+msgstr "Crie uma palavra-chave a partir da lista OpenAlex de conceitos da Wikipédia."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:81
+msgid "Create a keyword using this concept’s title and summary. Choose a keyword category below. The new keyword will be published and connected to this concept."
+msgstr "Crie uma palavra-chave com o título e o resumo deste conceito. Escolha uma categoria de palavras-chave abaixo. A nova palavra-chave será publicada e associada a este conceito."
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:9
+msgid "Create and connect a keyword from the OpenAlex list of Wikipedia concepts."
+msgstr "Crie e associe uma palavra-chave a partir da lista OpenAlex de conceitos da Wikipédia."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:92
+msgid "Create keyword"
+msgstr "Criar palavra-chave"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:24
+msgid "Descending concepts"
+msgstr "Conceitos descendentes"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:6
+msgid "Disconnect"
+msgstr "Desassociar"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:6
+msgid "Disconnect this concept from the keyword."
+msgstr "Desassociar este conceito da palavra-chave."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:3
+msgid "Find a Wikiconcept to associate with this keyword."
+msgstr "Procure um Wikiconcept para associar a esta palavra-chave."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:6
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:34
+msgid "Keyword"
+msgstr "Palavra-chave"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:83
+msgid "Keyword category"
+msgstr "Categoria de palavras-chave"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:8
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:45
+msgid "Last modified"
+msgstr "Última modificação"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:13
+msgid "Level"
+msgstr "Nível"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:7
+msgid "Name"
+msgstr "Nome"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:64
+msgid "No concepts found."
+msgstr "Não foram encontrados conceitos."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:24
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:21
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:30
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:41
+msgid "None"
+msgstr "Nenhum"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result.tpl:7
+msgid "Nothing found."
+msgstr "Nada encontrado."
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:31
+msgid "OpenAlex"
+msgstr "OpenAlex"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:11
+msgid "OpenAlex URL"
+msgstr "URL do OpenAlex"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_status.tpl:5
+msgid "Reimport wikiconcepts"
+msgstr "Reimportar Wikiconcepts"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:18
+msgid "Search by name, Wikidata ID, OpenAlex ID or URL"
+msgstr "Pesquisar por nome, ID Wikidata, ID OpenAlex ou URL"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:15
+msgid "Search concepts"
+msgstr "Pesquisar conceitos"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:11
+msgid "Select"
+msgstr "Selecionar"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_connected.tpl:16
+msgid "Set as URI"
+msgstr "Definir como URI"
+
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:192
+msgid "Sorry, a reimport couldn't be started."
+msgstr "Não foi possível iniciar a reimportação."
+
+#: zotonic_mod_wikiconcept/src/mod_wikiconcept.erl:185
+msgid "Sorry, the keyword could not be created in this category."
+msgstr "Não foi possível criar a palavra-chave nesta categoria."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:25
+msgid "Summary languages"
+msgstr "Idiomas do resumo"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:16
+msgid "Title languages"
+msgstr "Idiomas do título"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:9
+msgid "To link or import concepts, use the Advanced section on a keyword’s edit page or the new media dialog."
+msgstr "Para associar ou importar conceitos, use a seção Avançado na página de edição de uma palavra-chave ou a caixa de diálogo de novos arquivos de mídia."
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:8
+msgid "Total imported concepts:"
+msgstr "Total de conceitos importados:"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_status.tpl:10
+msgid "Trigger a reimport of wikiconcepts from the OpenAlex API."
+msgstr "Iniciar uma reimportação de Wikiconcepts a partir da API OpenAlex."
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_connect.tpl:7
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_panel.tpl:15
+msgid "Type to search..."
+msgstr "Digite para pesquisar..."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:39
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:48
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:57
+msgid "Unknown"
+msgstr "Desconhecido"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:30
+msgid "View at OpenAlex"
+msgstr "Ver no OpenAlex"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:27
+msgid "View at Wikidata"
+msgstr "Ver no Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:23
+msgid "View at Wikipedia"
+msgstr "Ver na Wikipédia"
+
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:3
+#: zotonic_mod_wikiconcept/priv/templates/admin_wikiconcepts.tpl:7
+msgid "WikiConcepts Overview"
+msgstr "Visão geral de WikiConcepts"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:28
+msgid "Wikidata"
+msgstr "Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_media_upload_tab.tpl:7
+msgid "Wikidata Concepts"
+msgstr "Conceitos Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:10
+msgid "Wikidata ID"
+msgstr "ID Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:10
+msgid "Wikidata URL"
+msgstr "URL do Wikidata"
+
+#: zotonic_mod_wikiconcept/priv/templates/_wikiconcept_search_result_items.tpl:24
+msgid "Wikipedia"
+msgstr "Wikipédia"
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:9
+msgid "Wikipedia URL"
+msgstr "URL da Wikipédia"
+
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:101
+msgid "You do not have permission to view this information."
+msgstr "Você não tem permissão para ver estas informações."
+
+#: zotonic_mod_wikiconcept/priv/templates/_admin_wikiconcepts_results.tpl:32
+#: zotonic_mod_wikiconcept/priv/templates/_dialog_wikiconcept_info.tpl:46
+msgid "d M Y, H:i"
+msgstr "d/m/Y, H:i"

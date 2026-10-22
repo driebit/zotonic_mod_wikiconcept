@@ -20,6 +20,118 @@
 %% limitations under the License.
 
 -module(m_wikiconcept).
+-moduledoc(#{
+    zotonic_keywords => [
+        "reference", "frontend_developer", "backend_developer", "model",
+        "search_and_discovery", "api_and_integration", "semantic_web"
+    ]
+}).
+-moduledoc("
+Look up imported Wikidata/OpenAlex concepts, search their names and connect
+them to keyword resources. Concept rows are binary-keyed maps, with properties
+from `props_json` merged into the result. Imported text is not guaranteed to
+be safe HTML; escape it when displayed.
+
+## Read paths
+
+| Path under `m.wikiconcept` | Result |
+| --- | --- |
+| `id[identifier]` | One concept by Wikidata Q-code, OpenAlex C-code or stored HTTPS URL. |
+| `find[identifier]` | Alias for `id`; this is not a free-text search. |
+| `find_keyword[identifier]` | Best matching connected keyword resource ID. |
+| `connected[resource_id]` | List of concepts connected to a resource. |
+| `list_all` | Concepts ordered by local numeric ID, using request arguments `page` and `pagelen` (defaults 1 and 50). |
+| `total` | Number of imported concepts. |
+
+For example:
+
+```django
+{% for concept in m.wikiconcept.connected[id] %}
+    {{ concept.display_name|escape }}
+{% endfor %}
+```
+
+Identifiers accept Q/C prefixes in either case, or an exact stored Wikidata,
+OpenAlex or Wikipedia HTTPS URL. A local numeric concept ID is not accepted
+by `get_concept/2`. Successful model reads return `{ok, {Value, Rest}}`;
+unknown identifiers return `{error, enoent}`. Unsupported model paths have
+no catch-all clause. Read paths do not check resource visibility or module
+permissions, including when returning connected keyword IDs.
+
+`find_keyword/2` first uses the concept's own keyword, then the connected
+ancestor with the greatest level, then a connected descendant with the
+smallest level. It returns `{ok, ResourceId}` or `{error, enoent}`.
+
+## Write paths
+
+POST to these model paths with a binary-keyed payload map:
+
+| Path | Payload | Behavior |
+| --- | --- | --- |
+| `insert/keyword` | `wikidata` | Return or create a keyword for the concept, returning `{ok, ResourceId}`. |
+| `connect` | `wikidata`, `id` | Connect the concept to the keyword resource, replacing a previous connection. |
+| `disconnect` | `wikidata`, `id` | Disconnect the concept from the keyword resource. |
+
+For example, the HTTP model endpoint for connecting is
+`/api/model/wikiconcept/post/connect`, with a JSON body such as
+`{\"wikidata\":\"Q420\",\"id\":1234}`. The transport's authentication and topic
+ACLs apply independently of the model checks.
+
+Connect/disconnect require `z_acl:rsc_editable/2` and a resource in the keyword
+category; failures return `eacces` or `enoent`. Their direct Erlang helpers do
+not repeat these ACL checks. Keyword insertion returns an existing connection
+or matching resource URI when available; otherwise it calls `m_rsc:insert/2`,
+trying the system content group and then the default group on `eacces`.
+Reusing a matching resource URI requires an editable keyword resource.
+`insert_keyword/3` accepts a category within the keyword subtree;
+`insert_keyword/2` defaults to `keyword`. Resource insertion checks the selected
+category and content group permissions. An already connected keyword is returned unchanged.
+
+For direct Erlang calls with a selected keyword subcategory:
+
+```erlang
+m_wikiconcept:insert_keyword(<<\"Q420\">>, CategoryId, Context).
+```
+
+The model POST path uses the default `keyword` category; category selection is
+available through `insert_keyword/3` and the admin concept dialog.
+
+New keywords are published and use the concept's translated `title` and `summary`.
+Each field retains nonempty translations matching the site's editable languages.
+If none match, a nonempty English translation is copied to
+`z_language:default_language/1`, independently of the current request language.
+For titles, missing English text falls back to `display_name`, then the supplied
+concept identifier. The resource's `language` property follows the resulting title
+translations. A summary without a matching or English translation is omitted.
+
+## Local search and remote import
+
+```erlang
+m_wikiconcept:find(<<\"biology\">>, 1, 20, Context).
+m_wikiconcept:get_concept(<<\"Q420\">>, Context).
+```
+
+`find/2` defaults to offset 1 and limit 20. `find/4` uses a one-based offset,
+normalizes text and matches words against local names, using PostgreSQL
+trigram similarity for scoring. Empty search text lists concepts by display
+name. Results are `{ok, [ConceptMap]}` or an error. `count/2` returns the exact
+number of matching concepts using the same criteria, without pagination.
+
+`find_descendant/2` defaults to offset 1 and limit 1000; `/4` accepts explicit
+pagination. It finds descendants one level below the first matching concept.
+`list_all_concepts/3` instead accepts a one-based page number and page size.
+
+`fetch_all/1,2` fetch OpenAlex pages and return
+`{ok, {Concepts, done | {next, Cursor}}}` or an error. `load/1` downloads and
+stores the complete catalogue. Remote `fetch/2`, `openalex_search/3` and
+`openalex_autocomplete/3` return provider response data through `z_fetch`;
+they are separate from the local model lookup paths.
+
+Installation and migration preserve existing rows and keyword links.
+`install_data/1` queues an import only for an empty catalogue; use the admin
+Reimport action to refresh populated tables. Imports update records by their
+Wikidata URL and reconcile search names while retaining keyword connections.
+").
 
 -export([
     m_get/3,
@@ -34,11 +146,13 @@
     get_concept/2,
 
     insert_keyword/2,
+    insert_keyword/3,
     find_keyword/2,
     rsc_merge/3,
 
     find/2,
     find/4,
+    count/2,
     find_all/3,
 
     find_descendant/2,
@@ -248,6 +362,19 @@ count_all_concepts(Context) ->
     Context :: z:context(),
     Reason :: term().
 insert_keyword(ConceptID, Context) ->
+    insert_keyword(ConceptID, keyword, Context).
+
+%% @doc Create a keyword in the selected keyword category or one of its subcategories.
+%% Resource insertion enforces the category and content group ACLs.
+-spec insert_keyword(binary(), m_category:category(), z:context()) ->
+    {ok, m_rsc:resource_id()} | {error, term()}.
+insert_keyword(ConceptID, Category, Context) ->
+    case m_category:is_a(Category, keyword, Context) of
+        true -> insert_keyword_1(ConceptID, Category, Context);
+        false -> {error, eacces}
+    end.
+
+insert_keyword_1(ConceptID, Category, Context) ->
     case get_concept(ConceptID, Context) of
         {ok, #{
             <<"keyword_id">> := Id
@@ -255,14 +382,14 @@ insert_keyword(ConceptID, Context) ->
             {ok, Id};
         {ok, #{
             <<"id">> := CId,
-            <<"display_name">> := TitleAll,
+            <<"display_name">> := DisplayName,
             <<"wikidata">> := WikiDataURI
         } = Concept} ->
-            Title = filter_lang(TitleAll, Context),
+            Title = keyword_title(maps:get(<<"title">>, Concept, undefined), DisplayName, ConceptID, Context),
             R = case m_rsc:rid(WikiDataURI, Context) of
                 undefined ->
                     Rsc = #{
-                        <<"category_id">> => keyword,
+                        <<"category_id">> => Category,
                         <<"is_published">> => true,
                         <<"uri">> => WikiDataURI,
                         <<"content_group_id">> => system_content_group,
@@ -282,7 +409,10 @@ insert_keyword(ConceptID, Context) ->
                             E
                     end;
                 KId ->
-                    {ok, KId}
+                    case m_rsc:is_a(KId, keyword, Context) andalso z_acl:rsc_editable(KId, Context) of
+                        true -> {ok, KId};
+                        false -> {error, eacces}
+                    end
             end,
             case R of
                 {ok, KwId} ->
@@ -305,25 +435,44 @@ insert_keyword(ConceptID, Context) ->
 langs(#trans{ tr = Tr }) ->
     [ Iso || {Iso, _} <- Tr ].
 
+%% Always provide a nonempty English fallback before selecting the site languages.
+keyword_title(Title, DisplayName, ConceptID, Context) ->
+    Tr = case Title of
+        #trans{tr = Translations} -> Translations;
+        Text when is_binary(Text) -> [{en, Text}];
+        _ -> []
+    end,
+    English = case nonempty_text(proplists:get_value(en, Tr)) of
+        true -> proplists:get_value(en, Tr);
+        false ->
+            case nonempty_text(DisplayName) of
+                true -> DisplayName;
+                false -> ConceptID
+            end
+    end,
+    filter_lang(#trans{tr = lists:keystore(en, 1, Tr, {en, English})}, Context).
+
 filter_lang(undefined, _Context) ->
     undefined;
 filter_lang(#trans{ tr = Tr }, Context) ->
     Editable = z_language:editable_language_codes(Context),
-    Tr1 = lists:filter(
-        fun({Iso, _}) ->
-            lists:member(Iso, Editable)
-        end,
-        Tr),
-    Tr2 = case Tr1 of
+    Filled = [{Iso, Text} || {Iso, Text} <- Tr, nonempty_text(Text)],
+    case [{Iso, Text} || {Iso, Text} <- Filled, lists:member(Iso, Editable)] of
         [] ->
-            En = z_convert:to_binary(proplists:get_value(en, Tr)),
-            [ {z_context:language(Context), En} ];
-        _ ->
-            Tr1
-    end,
-    #trans{ tr = Tr2 };
-filter_lang(Text, _Context) when is_binary(Text) ->
-    #trans{ tr = [{en, Text}] }.
+            case proplists:get_value(en, Filled) of
+                undefined -> undefined;
+                English -> #trans{tr = [{z_language:default_language(Context), English}]}
+            end;
+        Matching ->
+            #trans{tr = Matching}
+    end;
+filter_lang(Text, Context) when is_binary(Text) ->
+    filter_lang(#trans{tr = [{en, Text}]}, Context).
+
+nonempty_text(Text) when is_binary(Text) ->
+    z_string:trim(Text) =/= <<>>;
+nonempty_text(_) ->
+    false.
 
 
 %% @doc Handle the merge of two keywords. Merge all connected concepts.
@@ -504,63 +653,49 @@ find(Text, Offset, Limit, Context) ->
     Text1 = z_string:trim(unicode:characters_to_binary(Text)),
     find_1(Text1, Offset, Limit, Context).
 
-find_1(<<"https://", _/binary>> = URL, Offset, Limit, Context) ->
-    z_db:qmap_props("
-        select *
-        from wikiconcept
-        where wikidata = $1
-           or openalex = $1
-           or wikipedia = $1
-        order by wikidata_id
-        offset $2 limit $3",
-        [ URL, Offset-1, Limit ],
-        Context);
+%% @doc Count concepts using the same criteria as find/4, without pagination.
+-spec count(Text, Context) -> non_neg_integer() when
+    Text :: binary() | string(),
+    Context :: z:context().
+count(Text, Context) ->
+    Text1 = z_string:trim(unicode:characters_to_binary(Text)),
+    {_Select, From, Args, _Order} = find_query(Text1),
+    z_db:q1(["select count(*) ", From], Args, Context).
+
 find_1(Text, Offset, Limit, Context) ->
+    {Select, From, Args, Order} = find_query(Text),
+    N = length(Args),
+    SQL = iolist_to_binary([
+        "select ", Select, " ", From, " order by ", Order,
+        " offset $", integer_to_binary(N+1), " limit $", integer_to_binary(N+2)
+    ]),
+    z_db:qmap_props(SQL, Args ++ [Offset-1, Limit], Context).
+
+find_query(<<"https://", _/binary>> = URL) ->
+    {"c.*", "from wikiconcept c where c.wikidata = $1 or c.openalex = $1 or c.wikipedia = $1",
+     [URL], "c.wikidata_id"};
+find_query(Text) ->
     case words(z_string:normalize(Text)) of
         [] ->
-            find_all(Offset, Limit, Context);
-        % [ <<_/utf8>> ] ->
-        %     {ok, []};
+            {"c.*", "from wikiconcept c", [], "c.display_name, c.id"};
         [ <<"q", C1, C2, _/binary>> ] when ?is_digit(C1), ?is_digit(C2) ->
-            z_db:qmap_props("
-                select *
-                from wikiconcept
-                where wikidata_id = $1
-                order by wikidata_id
-                offset $2 limit $3",
-                [ Text, Offset-1, Limit ],
-                Context);
+            {"c.*", "from wikiconcept c where c.wikidata_id = $1", [Text], "c.wikidata_id"};
         [ <<"c", C1, C2, _/binary>> ] when ?is_digit(C1), ?is_digit(C2) ->
-            URL = <<"https://openalex.org/", Text/binary>>,
-            z_db:qmap_props("
-                select *
-                from wikiconcept
-                where openalex = $1
-                order by openalex
-                offset $2 limit $3",
-                [ URL, Offset-1, Limit ],
-                Context);
+            {"c.*", "from wikiconcept c where c.openalex = $1",
+             [<<"https://openalex.org/", Text/binary>>], "c.openalex"};
         Words ->
-            Where = lists:map(
-                fun(Nr) ->
-                    [ " n.name like concat('%', $", integer_to_binary(Nr+3), "::text, '%') " ]
-                end,
-                lists:seq(1, length(Words))),
-            Where1 = lists:join(" AND ", Where),
-            SQL = iolist_to_binary([
-                "select c.*, s.score
-                 from wikiconcept c
-                    join (
-                         select n.id, max(public.similarity(n.name, $1::text)) AS score
-                         from wikiconcept_name n
-                         where ", Where1, "
-                         group by n.id
-                         order by score desc
-                         offset $2 limit $3
-                    ) s
-                    on c.id = s.id"
+            Where = [
+                ["n.name like concat('%', $", integer_to_binary(N+1), "::text, '%')"]
+                || N <- lists:seq(1, length(Words))
+            ],
+            From = iolist_to_binary([
+                "from wikiconcept c join (
+                    select n.id, max(public.similarity(n.name, $1::text)) as score
+                    from wikiconcept_name n where ", lists:join(" and ", Where), "
+                    group by n.id
+                ) s on c.id = s.id"
             ]),
-            z_db:qmap_props(SQL, [ Text, Offset-1, Limit | Words ], Context)
+            {"c.*, s.score", From, [Text | Words], "s.score desc, c.id"}
     end.
 
 %% @doc Find all concepts, ordered by display_name.
@@ -807,18 +942,47 @@ ensure_trans(#trans{ tr = S }, #trans{ tr = T }) ->
     S1 = [ {Iso, <<>>} || Iso <- TIso -- SIso ],
     #trans{ tr = S ++ S1 }.
 
-%% @doc Install the datamodel to receive all concepts.
+%% @doc Create missing tables and migrate legacy properties without losing concept links.
+-spec install(Context) -> ok when
+    Context :: z:context().
 install(Context) ->
-    case z_db:table_exists(wikiconcept, Context) of
-        true ->
-            z_db:drop_table(wikiconcept_name, Context),
-            z_db:drop_table(wikiconcept, Context);
-        false ->
-            ok
-    end,
-    % The pg_trgm extension can only created once per database, so we
-    % create it in the public schema and the refer to that schema.
+    ok = z_db:transaction(fun install_schema/1, Context),
+    z_db:flush(Context),
+    ok.
+
+install_schema(Context) ->
+    % pg_trgm is shared by all sites in the database; never drop it on reinstall.
     [] = z_db:q("create extension if not exists pg_trgm with schema public", Context),
+    case z_db:table_exists(wikiconcept, Context) of
+        true -> migrate_props_json(Context);
+        false -> create_concepts(Context)
+    end,
+    case z_db:table_exists(wikiconcept_name, Context) of
+        true -> ok;
+        false -> create_names(Context)
+    end,
+    [] = z_db:q("create index if not exists fki_wikiconcept_keyword_id on wikiconcept (keyword_id)", Context),
+    [] = z_db:q("create index if not exists wikiconcept_mag_key on wikiconcept (mag)", Context),
+    [] = z_db:q("create index if not exists wikiconcept_wikipedia_key on wikiconcept (wikipedia)", Context),
+    [] = z_db:q("
+        create index if not exists wikiconcept_name_name on wikiconcept_name
+        using gin (name public.gin_trgm_ops)", Context),
+    ok.
+
+migrate_props_json(Context) ->
+    case z_db:column(wikiconcept, props_json, Context) of
+        {ok, #column_def{ type = <<"jsonb">> }} ->
+            ok;
+        {ok, #column_def{ type = <<"bytea">> }} ->
+            % The old schema stored UTF-8 JSON in bytea via DB_PROPS_JSON.
+            % Invalid data aborts the transaction instead of discarding it.
+            [] = z_db:q("
+                alter table wikiconcept alter column props_json type jsonb
+                using convert_from(props_json, 'UTF8')::jsonb", Context),
+            ok
+    end.
+
+create_concepts(Context) ->
     [] = z_db:q("
         create table wikiconcept (
             id serial not null,
@@ -845,38 +1009,31 @@ install(Context) ->
             constraint wikiconcept_pkey primary key (id),
             constraint wikiconcept_openalex_key unique (openalex),
             constraint wikiconcept_wikidata_key unique (wikidata),
-            constraint wikiconcept_wikidata_id_key unique (wikidata_id)
+            constraint wikiconcept_wikidata_id_key unique (wikidata_id),
+            constraint fk_wikiconcept_keyword_id foreign key (keyword_id)
+                references rsc (id) on update cascade on delete set null
         )", Context),
+    ok.
 
+create_names(Context) ->
     [] = z_db:q("
         create table wikiconcept_name (
             id serial not null,
-            name character varying(1000)
+            name character varying(1000),
+            constraint fk_wikiconcept_name_id foreign key (id)
+                references wikiconcept (id) on update cascade on delete cascade
         )", Context),
-
-    [] = z_db:q("
-        alter table wikiconcept_name add constraint fk_wikiconcept_name_id foreign key (id)
-        references wikiconcept (id)
-        on update cascade on delete cascade", Context),
-
-    [] = z_db:q("
-        alter table wikiconcept add constraint fk_wikiconcept_keyword_id foreign key (keyword_id)
-        references rsc (id)
-        on update cascade on delete set null", Context),
-    [] = z_db:q("create index fki_wikiconcept_keyword_id ON wikiconcept (keyword_id)", Context),
-
-    [] = z_db:q("create index wikiconcept_mag_key on wikiconcept (mag)", Context),
-    [] = z_db:q("create index wikiconcept_wikipedia_key on wikiconcept (wikipedia)", Context),
-
-    [] = z_db:q("
-        create index wikiconcept_name_name ON wikiconcept_name
-        USING GIN (name public.gin_trgm_ops)", Context),
-
-    z_db:flush(Context),
     ok.
 
-%% @doc Ensure that the wikiconcepts are loaded into the local table. They are downloaded from OpenAlex
-%% using their public API.
+%% @doc Schedule the initial import only for an empty table. Use the admin reimport
+%% action to refresh existing concepts without removing keyword connections.
+-spec install_data(Context) -> ok when
+    Context :: z:context().
 install_data(Context) ->
-    {ok, _} = z_pivot_rsc:insert_task(m_wikiconcept, load, <<>>, Context),
-    ok.
+    case z_db:q1("select exists(select 1 from wikiconcept)", Context) of
+        true ->
+            ok;
+        false ->
+            {ok, _} = z_pivot_rsc:insert_task(?MODULE, load, <<>>, Context),
+            ok
+    end.

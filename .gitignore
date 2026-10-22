@@ -2,6 +2,7 @@
 *.o
 *.beam
 *.plt
+*.mo
 erl_crash.dump
 .concrete/DEV_MODE
 
